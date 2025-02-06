@@ -3,6 +3,7 @@ package chess;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -13,6 +14,8 @@ import java.util.List;
 public class ChessGame {
     private TeamColor TeamTurn;
     private ChessBoard GameBoard;
+    private ChessMove move;
+
     public ChessGame() {
         TeamTurn = TeamColor.WHITE;
     }
@@ -66,7 +69,21 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        throw new RuntimeException("Not implemented");
+        this.move = move;
+        ChessBoard board = getBoard();
+        ChessPosition startPosition = move.getStartPosition();
+        ChessPosition endPosition = move.getEndPosition();
+        ChessPiece.PieceType promotionPiece = move.getPromotionPiece();
+
+        ChessPiece target = board.getPiece(startPosition);
+        if (target != null) {
+            if (promotionPiece != null) {
+                board.addPiece(endPosition, new ChessPiece(target.getTeamColor(),promotionPiece));
+            }
+            else board.addPiece(endPosition,target);
+            board.addPiece(startPosition,null);
+        }
+        
     }
 
     /**
@@ -76,7 +93,17 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        ChessPosition kingPosition;
+        kingSearch:
+        for (int x = 0; x<9; x++) {
+            for (int y=0;y<9;y++) {
+                kingPosition = new ChessPosition(x,y);
+                if (Objects.equals(getBoard().getPiece(kingPosition), new ChessPiece(teamColor, ChessPiece.PieceType.KING))) {
+                    break kingSearch;
+                }
+            }
+        }
+        
     }
 
     /**
