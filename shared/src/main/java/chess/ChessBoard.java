@@ -10,9 +10,21 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public class ChessBoard {
-    private ChessPiece[][] board = new ChessPiece[8][8];
+    private ChessPiece[][] board;
     public ChessBoard() {
-        
+        this.board = new ChessPiece[8][8];
+    }
+    public ChessBoard(ChessBoard copy) {
+        board = new ChessPiece[8][8];
+        for(int x = 1;x<9;x++) {
+            for (int y=1;y<9;y++) {
+                ChessPosition targetPos = new ChessPosition(x,y);
+                ChessPiece target = copy.getPiece(targetPos);
+                if (target != null) {
+                    addPiece(targetPos,new ChessPiece(target.getTeamColor(),target.getPieceType()));
+                }
+            }
+        }
     }
 
     /**
