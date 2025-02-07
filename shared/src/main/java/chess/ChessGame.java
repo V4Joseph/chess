@@ -182,7 +182,7 @@ public class ChessGame {
      */
     public boolean isInCheckmate(TeamColor teamColor) {
 
-        if (isInCheck(teamColor) && isInStalemate(teamColor)) {
+        if (isInCheck(teamColor) && validMovesChecker(teamColor)) {
             return true;
         } else return false;
     }
@@ -195,21 +195,25 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        int row;
-        int col;
-        for (row = 1;row<9;row++) {
-            for (col = 1;col<9;col++) {
-                ChessPosition checkPosition = new ChessPosition(row,col);
-                ChessPiece target = GameBoard.getPiece(checkPosition);
-                if (target != null && target.getTeamColor() == teamColor) {
-                    if (!validMoves(checkPosition).isEmpty()) {
-                        return false;
+        if (isInCheck(teamColor)) return false;
+        else return validMovesChecker(teamColor);
+    }
+    public boolean validMovesChecker (TeamColor teamColor) {
+            int row;
+            int col;
+            for (row = 1;row<9;row++) {
+                for (col = 1;col<9;col++) {
+                    ChessPosition checkPosition = new ChessPosition(row,col);
+                    ChessPiece target = GameBoard.getPiece(checkPosition);
+                    if (target != null && target.getTeamColor() == teamColor) {
+                        if (!validMoves(checkPosition).isEmpty()) {
+                            return false;
+                        }
                     }
                 }
             }
+            return true;
         }
-        return true;
-    }
 
     /**
      * Sets this game's chessboard with a given board
