@@ -98,9 +98,14 @@ public class ChessGame {
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
         ChessPosition startPosition = move.getStartPosition();
+        if (GameBoard.getPiece(startPosition) == null || GameBoard.getPiece(startPosition).getTeamColor() != TeamTurn) throw new InvalidMoveException("This move is invalid");
         Collection<ChessMove> validMoveList = validMoves(startPosition);
         if (validMoveList.contains(move)) {
             makeTestMove(move);
+            if (TeamTurn == TeamColor.WHITE) {
+                TeamTurn = TeamColor.BLACK;
+            } else TeamTurn = TeamColor.WHITE;
+
         }
         else throw new InvalidMoveException("This move is invalid");
     }
