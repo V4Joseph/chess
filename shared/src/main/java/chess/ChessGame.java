@@ -70,8 +70,8 @@ public class ChessGame {
         ChessBoard board = getBoard();
         ChessBoard backUpBoard = new ChessBoard(board);
         ChessPiece target = board.getPiece(startPosition);
-        Collection<ChessMove> MoveList = new ArrayList<ChessMove>();
-        Collection<ChessMove> validMoveList = new ArrayList<ChessMove>();
+        Collection<ChessMove> MoveList;
+        Collection<ChessMove> validMoveList = new ArrayList<>();
         if (target == null) {
             return null;
         }
@@ -79,11 +79,11 @@ public class ChessGame {
             TeamColor targetColor = target.getTeamColor();
             MoveList = target.pieceMoves(board,startPosition);
             for (ChessMove move: MoveList) {
-                makeTestMove(move);
+                makeTestMove(move,GameBoard);
                 if (!isInCheck(targetColor)) {
                     validMoveList.add(move);
                 }
-                board = backUpBoard;
+                GameBoard = new ChessBoard(backUpBoard);
             }
         }
 
@@ -98,14 +98,14 @@ public class ChessGame {
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
         ChessPosition startPosition = move.getStartPosition();
+        ChessBoard board = getBoard();
         Collection<ChessMove> validMoveList = validMoves(startPosition);
         if (validMoveList.contains(move)) {
-            makeTestMove(move);
+            makeTestMove(move,board);
         }
         else throw new InvalidMoveException("This move is invalid");
     }
-    public void makeTestMove(ChessMove move) {
-        ChessBoard board = getBoard();
+    public void makeTestMove(ChessMove move,ChessBoard board) {
         ChessPosition startPosition = move.getStartPosition();
         ChessPosition endPosition = move.getEndPosition();
         ChessPiece.PieceType promotionPiece = move.getPromotionPiece();
@@ -190,7 +190,20 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        int row;
+        int col;
+        for (row = 1;row<9;row++) {
+            for (col = 1;col<9;col++) {
+                ChessPosition checkPosition = new ChessPosition(row,col);
+                ChessPiece target = GameBoard.getPiece(checkPosition);
+                if (target != null && target.getTeamColor() == teamColor) {
+                    if (!validMoves(checkPosition).isEmpty()) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     /**
