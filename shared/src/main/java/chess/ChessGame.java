@@ -79,7 +79,7 @@ public class ChessGame {
             TeamColor targetColor = target.getTeamColor();
             MoveList = target.pieceMoves(board,startPosition);
             for (ChessMove move: MoveList) {
-                makeTestMove(move,GameBoard);
+                makeTestMove(move);
                 if (!isInCheck(targetColor)) {
                     validMoveList.add(move);
                 }
@@ -98,14 +98,14 @@ public class ChessGame {
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
         ChessPosition startPosition = move.getStartPosition();
-        ChessBoard board = getBoard();
         Collection<ChessMove> validMoveList = validMoves(startPosition);
         if (validMoveList.contains(move)) {
-            makeTestMove(move,board);
+            makeTestMove(move);
         }
         else throw new InvalidMoveException("This move is invalid");
     }
-    public void makeTestMove(ChessMove move,ChessBoard board) {
+    public void makeTestMove(ChessMove move) {
+        ChessBoard board = getBoard();
         ChessPosition startPosition = move.getStartPosition();
         ChessPosition endPosition = move.getEndPosition();
         ChessPiece.PieceType promotionPiece = move.getPromotionPiece();
