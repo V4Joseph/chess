@@ -1,5 +1,6 @@
 package dataaccess;
 
+import chess.ChessGame;
 import model.GameData;
 
 import java.util.Collection;
@@ -26,8 +27,10 @@ public class GameDataMem implements GameDataAccess {
         return games.values();
     }
 
-    public void updateGame(int GameID) throws DataAccessException {
+    public void updateGame(int gameID) throws DataAccessException {
         // Unsure about this part
+
+
     }
 
     public void clearGames() throws DataAccessException {
